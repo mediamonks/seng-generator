@@ -1,0 +1,33 @@
+language: node_js
+
+node_js:
+  - 'stable'
+  - '6'
+
+sudo: false
+
+before_install:
+  - if [[ `npm -v` != 4* ]]; then npm i -g npm@4; fi
+
+deploy:
+  - provider: npm
+    email: 'devmonk@mediamonks.com'
+    api_key:
+      secure: ''
+    on:
+      tags: true
+      node: '6'
+    skip_cleanup: true
+
+  - provider: releases
+    api_key:
+      secure: ''
+    file:
+      - "seng-generator-*.zip"
+      - "seng-generator-*.tar.gz"
+    file_glob: true
+    on:
+      tags: true
+      node: '6'
+    skip_cleanup: true
+

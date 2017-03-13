@@ -1,0 +1,75 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const generate = require('../src/generate');
+const chalk = require('chalk');
+const fs = require('fs');
+const path = require('path');
+const Settings = require('../src/settings');
+
+let templateType = null;
+let componentName = null;
+let subDirectory = '';
+
+program
+	.usage('<template> [name]')
+	.arguments('<template> [name]')
+	.action((type, name) => {
+		templateType = type;
+		componentName = name;
+	})
+	.option('-d, --destination <destination>', 'Override destination')
+	.option('-s, --sub-directory <directory>', 'Set subdirectory')
+	.option('-p, --template-path <template-path>', 'Override template path')
+	.option('-f, --force', 'Force creation of a component')
+	.parse(process.argv);
+
+if (!templateType) {
+	console.error(chalk.red('Type not set'));
+	process.exit(1);
+}
+
+if (!componentName) {
+	console.error(chalk.red('Name not set'));
+	process.exit(1);
+}
+
+let settingsOverrides = {};
+
+if (program.destination) {
+	settingsOverrides['destination'] = program.destination;
+}
+
+if (program.subDirectory) {
+	subDirectory = program.subDirectory;
+}
+
+if (program.templatePath) {
+	settingsOverrides['templatePath'] = program.templatePath;
+}
+
+const settings = Settings.getSettings(settingsOverrides);
+
+if (!settings.templates[templateType]) {
+	console.error(chalk.red(`Template ${templateType} doesn't exist in template folder.`));
+	process.exit(1);
+}
+const defaultDestination = settings['destination'];
+
+const destination = path.join(settingsOverrides['destination'] || settings.templates[templateType].destination || defaultDestination, subDirectory);
+
+if (!fs.existsSync(destination) && !program.force) {
+	console.error(chalk.red(`Destination path (${path.resolve(destination)}) doesn't exist. Use '-force' or '-f' to generate missing folders.`));
+	process.exit(1);
+}
+
+const options = {
+	name: componentName,
+	destination: destination
+};
+
+generate(templateType, options, settings);
+
+
+
+

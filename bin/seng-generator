@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const chalk = require('chalk');
+
+console.log(chalk.blue('Seng Generator'));
+
+program
+	.version(require('../package').version)
+	.usage('<command> [options]')
+	.command('generate', 'Generate', { isDefault: true })
+	.command('wizard', 'Start generator wizard')
+	.command('init', 'Create a local settings file (.senggenerator)')
+	.command('reset', 'Reset global settings')
+	.command('settings', 'Set or display settings')
+	.parse(process.argv);

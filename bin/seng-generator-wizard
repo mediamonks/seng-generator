@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const wizard = require('../src/wizard');
+const chalk = require('chalk');
+
+let templateType = null;
+let componentName = null;
+
+program
+	.usage('[type] [name]')
+	.arguments('[type] [name]')
+	.action((type, name) => {
+		templateType = type;
+		componentName = name;
+	})
+	.parse(process.argv);
+
+wizard(templateType, componentName);
+
+
+
+
