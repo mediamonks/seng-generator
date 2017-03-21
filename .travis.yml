@@ -13,7 +13,7 @@ deploy:
   - provider: npm
     email: 'devmonk@mediamonks.com'
     api_key:
-      secure: ''
+      secure: "MWOAMnZqJsWaBD/hFnZ+19WQ5ukhALVvtXPO2+LizAoUuFr4GrB4NpN8rkDed/l1vZ6hMDwdg+dXEP4vX40jgvtCSW3ExjWBzsgK7X+lzPma0dE3194Po6ZqcuBMcs0tLNgQ6zKAQO6onLbXlsyAvTJZpBI0t6O2Rm/sPLLVts9eKawS59qjtW3AFuXrp8L5deDwhbvAn2ytq/Z0wjMvl/SjuRRqMUxdfRXpzWmPVf6tCTJ7XkICjlSlcecQ8P82TVrQJR8fAHDtnBFZ5wJQU84mz6PCi+kvrVEfwVZbhTqw33mLBo4g98dyQ1obcDWjH7F5FCmNSqhsISp90oHYyi9bMBHUQt5fzFTRV6G+UdO0I9vd64+MP0MAa6IIrNdlF5OyZnYAnnPeBflhT0Rx+32W6BaPVCpvYK/4YbPqj2godFOo9H7m8WhDz/V4YdPhM9NSUCQObK9uFIS8Eo0iYDrHkODw358RI5SxVDABy0e0B6Go2RiHZtMaIOm2Z7Yy9sUnNiR5Md7D8myIhvreyKfmbG9+Cguvk5mDt4SqikUId0mjQ0UPdIuzwFc4ZmxOpK5nGpbZrQCbTuCS8Bi+B3CKZrCCOdwaU1hDCj1JFVVHT+4bDWJjMkAEqC6TBpBcjDAilYC0WkTvQrtwlHvJaz+Bhf3MXKd7ZmBgEPYidhc="
     on:
       tags: true
       node: '6'
