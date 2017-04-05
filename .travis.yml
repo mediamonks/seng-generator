@@ -18,16 +18,3 @@ deploy:
       tags: true
       node: '6'
     skip_cleanup: true
-
-  - provider: releases
-    api_key:
-      secure: ''
-    file:
-      - "seng-generator-*.zip"
-      - "seng-generator-*.tar.gz"
-    file_glob: true
-    on:
-      tags: true
-      node: '6'
-    skip_cleanup: true
-
