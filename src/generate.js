@@ -29,8 +29,7 @@ module.exports = function generate(type, options, settings) {
 	console.log();
 	console.log(chalk.green(chalk.bold(`Generating files from '${type}' template with name: ${options.name}`)));
 
-	console.log();
-	console.log(getNames(options.name));
+
 	metalsmith(fullTemplatePath)
 		.metadata(Object.assign({}, getNames(options.name)))
 		.source('.')
