@@ -5,6 +5,7 @@ const async = require('async');
 const metalsmith = require('metalsmith');
 const render = require('consolidate').handlebars.render;
 const toSlugCase = require('to-slug-case');
+const toSnakeCase = require('to-snake-case');
 const toCamelCase = require('to-camel-case');
 const toPascalCase = require('to-pascal-case');
 const isTextOrBinary = require('istextorbinary');
@@ -28,6 +29,7 @@ module.exports = function generate(type, options, settings) {
 	console.log();
 	console.log(chalk.green(chalk.bold(`Generating files from '${type}' template with name: ${options.name}`)));
 
+
 	metalsmith(fullTemplatePath)
 		.metadata(Object.assign({}, getNames(options.name)))
 		.source('.')
@@ -48,11 +50,13 @@ module.exports = function generate(type, options, settings) {
 };
 
 function getNames(name) {
+
 	return {
 		name,
 		name_cc: toCamelCase(name),
 		name_pc: toPascalCase(name),
-		name_sc: toSlugCase(name)
+		name_sc: toSlugCase(name),
+		name_snc: toSnakeCase(name),
 	}
 }
 
