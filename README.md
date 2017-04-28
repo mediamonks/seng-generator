@@ -43,6 +43,7 @@ Inside files you can use the handlebar syntax ```{{variable}}```.
 * ```name_pc```: Name converted to PascalCase
 * ```name_sc```: Name converted to slug-case
 * ```name_cc```: Name converted to CamelCase
+* ```name_snc```: Name converted to snake_case
 
 Don't forget to run ```$ sg init``` or set the template path with ```$ sg settings``` to use your custom templates with seng-generator
 
