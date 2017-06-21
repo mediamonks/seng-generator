@@ -38,10 +38,6 @@ exports.setLocalSettings = function (settings) {
 	fs.writeFileSync(path.resolve(settingsFile), JSON.stringify(settings, null, 2));
 };
 
-exports.setTemplateSettings = function (settings) {
-	//fs.writeFileSync(path.resolve(settingsFile), JSON.stringify(settings, null, 2));
-};
-
 exports.hasLocalSettings = function (settingsPath = '.') {
 	return fs.existsSync(path.join(settingsPath, settingsFile));
 };
@@ -92,16 +88,20 @@ exports.logSettings = function (settings, indent = 0) {
 };
 
 exports.getTemplateSettings = function (templatePath) {
-	const dirContents = fs.readdirSync(templatePath);
+	const paths = templatePath.split(',');
 
 	let result = {};
 
-	dirContents.forEach((content) => {
-		const contentPath = path.join(templatePath, content);
+	paths.forEach((templatePath) => {
+		const dirContents = fs.readdirSync(templatePath);
 
-		if (fs.statSync(contentPath).isDirectory()) {
-			result[content] = this.getLocalSettings(contentPath);
-		}
+		dirContents.forEach((content) => {
+			const contentPath = path.join(templatePath, content);
+
+			if (fs.statSync(contentPath).isDirectory()) {
+				result[content] = this.getLocalSettings(contentPath);
+			}
+		});
 	});
 
 	return result;

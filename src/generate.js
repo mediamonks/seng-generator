@@ -11,24 +11,26 @@ const toPascalCase = require('to-pascal-case');
 const isTextOrBinary = require('istextorbinary');
 
 module.exports = function generate(type, options, settings) {
+	const paths = settings.templatePath.split(',');
 
-	if (!pathExists(settings.templatePath)) {
+	templatePath = paths.find((templatePath) => pathExists(path.join(templatePath, '/' + type)));
+
+	if(!templatePath) {
+		console.log();
+		console.error(chalk.red(`Template folder that contains template ${type} doesn't exist`));
+		return;
+	}
+
+	if (!pathExists(templatePath)) {
 		console.log();
 		console.error(chalk.red(`Template folder (${path.resolve(settings.templatePath)}) doesn't exist`));
 		return;
 	}
 
-	const fullTemplatePath = path.join(settings.templatePath, '/' + type);
-
-	if (!pathExists(fullTemplatePath)) {
-		console.log();
-		console.log(chalk.red(`'${options.type}' template folder doesn't exist in ${path.resolve(settings.templatePath)}`));
-		return;
-	}
+	const fullTemplatePath = path.join(templatePath, '/' + type);
 
 	console.log();
 	console.log(chalk.green(chalk.bold(`Generating files from '${type}' template with name: ${options.name}`)));
-
 
 	metalsmith(fullTemplatePath)
 		.metadata(Object.assign({}, getNames(options.name)))

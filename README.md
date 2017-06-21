@@ -29,7 +29,8 @@ The name of the folder is important because you have to use the name to create c
 
 Inside that folder you can add/create your own files. There are no limits it can contain as much files and folder as possible.
 
-You can create as many templates as you need. It's also possible to create multiple template folders. 
+You can create as many templates as you need. It's also possible to create multiple template folders (a comma 
+separated templatePath can be used if there are multiple folders with templates). 
 You can for example create a template folder per project so it can be shared with other project members together with the rest of the code.
 
 #### Variables
