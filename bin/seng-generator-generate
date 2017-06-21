@@ -63,12 +63,18 @@ if (!fs.existsSync(destination) && !program.force) {
 	process.exit(1);
 }
 
-const options = {
-	name: componentName,
-	destination: destination
-};
+Promise.all(componentName.split(',').map((name) => {
+	const options = {
+		name: name,
+		destination: destination
+	};
 
-generate(templateType, options, settings);
+	return generate(templateType, options, settings);
+})).then(() => {
+	console.log();
+	console.log(chalk.green('Done!'));
+});
+
 
 
 

@@ -16,39 +16,38 @@ module.exports = function generate(type, options, settings) {
 	templatePath = paths.find((templatePath) => pathExists(path.join(templatePath, '/' + type)));
 
 	if(!templatePath) {
-		console.log();
 		console.error(chalk.red(`Template folder that contains template ${type} doesn't exist`));
-		return;
+		return Promise.reject();
 	}
 
 	if (!pathExists(templatePath)) {
-		console.log();
 		console.error(chalk.red(`Template folder (${path.resolve(settings.templatePath)}) doesn't exist`));
-		return;
+		return Promise.reject();
 	}
 
 	const fullTemplatePath = path.join(templatePath, '/' + type);
 
-	console.log();
 	console.log(chalk.green(chalk.bold(`Generating files from '${type}' template with name: ${options.name}`)));
 
-	metalsmith(fullTemplatePath)
-		.metadata(Object.assign({}, getNames(options.name)))
-		.source('.')
-		.destination(path.resolve(options.destination))
-		.clean(false)
-		.use(filterSettings)
-		.use(renderPaths)
-		.use(renderTemplates)
-		.build(function (err) {
-			if (err) {
-				console.error(chalk.red(err));
-			}
-			else {
-				console.log();
-				console.log(chalk.green('Done!'));
-			}
-		});
+	return new Promise((resolve, reject) => {
+		metalsmith(fullTemplatePath)
+			.metadata(Object.assign({}, getNames(options.name)))
+			.source('.')
+			.destination(path.resolve(options.destination))
+			.clean(false)
+			.use(filterSettings)
+			.use(renderPaths)
+			.use(renderTemplates)
+			.build(function (err) {
+				if (err) {
+					console.error(chalk.red(err));
+					reject();
+				}
+				else {
+					resolve();
+				}
+			});
+	});
 };
 
 function getNames(name) {

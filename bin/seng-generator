@@ -4,6 +4,7 @@ const program = require('commander');
 const chalk = require('chalk');
 
 console.log(chalk.blue('Seng Generator'));
+console.log();
 
 program
 	.version(require('../package').version)
