@@ -114,7 +114,7 @@ $ sg <type> <name>
 Arguments:
 
 * ```type```: The template you want to use. 
-* ```name```: The name you want to use.
+* ```name```: The name you want to use. Can be a comma seperated list to create multiple (example1,example2).
 
 Options:
 
