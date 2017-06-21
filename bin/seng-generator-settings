@@ -36,7 +36,7 @@ if (program.templatePath) {
 	settings['templatePath'] = program.templatePath;
 }
 
-if (Object.keys(settings).length == 0) {
+if (Object.keys(settings).length == 0 && !program.global) {
 	console.log();
 	console.log(chalk.green(`Settings:`));
 	Settings.logSettings(Settings.getSettings());
