@@ -28,8 +28,6 @@ module.exports = function generate(type, options, settings) {
 
 	const fullTemplatePath = path.join(templatePath, '/' + type);
 
-	console.log(chalk.green(chalk.bold(`Generating files from '${type}' template with name: ${options.name}`)));
-
 	let userVariables = options.variables || {};
 	let variables = {};
 	let variableSettings = {};
@@ -41,8 +39,8 @@ module.exports = function generate(type, options, settings) {
 			return result;
 		}, {});
 		variables = (settings.templates[type].variables || []).reduce((result, variable) => {
-			if(typeof variable.default == 'undefined' && typeof userVariables[variable.name] == 'undefined') {
-				console.log(chalk.orange(`warning: custom variable '${variable.name}' is not supplied and has no default value`));
+			if(typeof variable.default === 'undefined' && typeof userVariables[variable.name] === 'undefined') {
+				console.log(chalk.yellow(`Warning: custom variable '${variable.name}' is not supplied and has no default value`));
 			}
 
 			if(typeof variable.default)
@@ -69,7 +67,7 @@ module.exports = function generate(type, options, settings) {
 				value = parseFloat(value);
 			}
 		} else {
-			console.log(chalk.orange(`warning: variable '${key}' is not declared in the template .senggenerator file`));
+			console.log(chalk.yellow(`Warning: variable '${key}' is not declared in the template .senggenerator file`));
 		}
 
 		result[key] = value;
@@ -78,6 +76,8 @@ module.exports = function generate(type, options, settings) {
 	}, {});
 
 	variables = _.merge(variables, userVariables, getNames(options.name));
+
+	console.log(chalk.green(chalk.bold(`Generating files from '${type}' template with name: ${options.name}`)));
 
 	return new Promise((resolve, reject) => {
 		metalsmith(fullTemplatePath)
