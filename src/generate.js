@@ -41,9 +41,9 @@ module.exports = function generate(type, options, settings) {
 		variables = (settings.templates[type].variables || []).reduce((result, variable) => {
 			if(typeof variable.default === 'undefined' && typeof userVariables[variable.name] === 'undefined') {
 				console.log(chalk.yellow(`Warning: custom variable '${variable.name}' is not supplied and has no default value`));
+				console.log();
 			}
 
-			if(typeof variable.default)
 			result[variable.name] = variable.default || '';
 
 			return result;
@@ -68,6 +68,7 @@ module.exports = function generate(type, options, settings) {
 			}
 		} else {
 			console.log(chalk.yellow(`Warning: variable '${key}' is not declared in the template .senggenerator file`));
+			console.log();
 		}
 
 		result[key] = value;
