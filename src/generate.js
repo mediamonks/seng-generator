@@ -89,6 +89,7 @@ module.exports = function generate(type, options, settings) {
 			.use(filterSettings)
 			.use(renderPaths)
 			.use(renderTemplates)
+			.use(!options.force ? checkExists : (files, metalsmith, done) => done())
 			.build(function (err) {
 				if (err) {
 					console.error(chalk.red(err));
@@ -98,6 +99,7 @@ module.exports = function generate(type, options, settings) {
 					resolve();
 				}
 			});
+	}).catch((error) => {
 	});
 };
 
@@ -162,6 +164,28 @@ function renderTemplates(files, metalsmith, done) {
 			files[file].contents = new Buffer(res);
 			done();
 		});
+	}
+}
+
+function checkExists(files, metalsmith, done) {
+	const keys = Object.keys(files);
+
+	const destination = metalsmith.destination();
+
+	let fileExists = null;
+
+	keys.forEach((key) => {
+		const filePath = path.join(destination, key);
+		if(pathExists(filePath))
+		{
+			fileExists = filePath;
+		}
+	});
+
+	if(fileExists) {
+		done(`${fileExists} already exists. Use force (-f) if you want to override the existing file.`);
+	} else {
+		done();
 	}
 }
 

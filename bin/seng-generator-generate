@@ -93,7 +93,8 @@ function generateCode() {
 		const options = {
 			name: name,
 			destination: destination,
-			variables: variables
+			variables: variables,
+			force: program.force
 		};
 
 		return generate(templateType, options, settings);
