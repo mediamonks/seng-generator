@@ -50,7 +50,7 @@ module.exports = function generate(type, options, settings) {
 		}, {});
 	}
 
-	userVariables = Object.keys(userVariables).reduce((result, key)=> {
+	userVariables = Object.keys(userVariables).reduce((result, key) => {
 		let value = userVariables[key];
 
 		if(variableSettings[key]) {
