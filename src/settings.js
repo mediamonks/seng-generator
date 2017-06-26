@@ -61,7 +61,7 @@ exports.getLocalSettings = function (settingsPath = '.') {
 				type: 'input'
 			};
 
-			settings.variables = settings.variables.map((variable) => _.merge(defaultVariable, variable));
+			settings.variables = settings.variables.map((variable) => _.merge({}, defaultVariable, variable));
 		}
 
 		return settings;
