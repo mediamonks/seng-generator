@@ -9,6 +9,7 @@ const toSnakeCase = require('to-snake-case');
 const toCamelCase = require('to-camel-case');
 const toPascalCase = require('to-pascal-case');
 const isTextOrBinary = require('istextorbinary');
+const _ = require('lodash');
 
 module.exports = function generate(type, options, settings) {
 	const paths = settings.templatePath.split(',');
@@ -29,9 +30,58 @@ module.exports = function generate(type, options, settings) {
 
 	console.log(chalk.green(chalk.bold(`Generating files from '${type}' template with name: ${options.name}`)));
 
+	let userVariables = options.variables || {};
+	let variables = {};
+	let variableSettings = {};
+
+	if(settings.templates[type]) {
+		variableSettings = (settings.templates[type].variables || []).reduce((result, variable) => {
+			result[variable.name] = variable;
+
+			return result;
+		}, {});
+		variables = (settings.templates[type].variables || []).reduce((result, variable) => {
+			if(typeof variable.default == 'undefined' && typeof userVariables[variable.name] == 'undefined') {
+				console.log(chalk.orange(`warning: custom variable '${variable.name}' is not supplied and has no default value`));
+			}
+
+			if(typeof variable.default)
+			result[variable.name] = variable.default || '';
+
+			return result;
+		}, {});
+	}
+
+	userVariables = Object.keys(userVariables).reduce((result, key)=> {
+		let value = userVariables[key];
+
+		if(variableSettings[key]) {
+			if(variableSettings[key].isArray) {
+				value = value.split(',');
+				if(variableSettings[key].isBoolean) {
+					value = value.map((item) => item == 'true' || item == 1);
+				} else if(variableSettings[key].isNumber) {
+					value = value.map((item) => parseFloat(item));
+				}
+			} else if(variableSettings[key].isBoolean) {
+				value = value == 'true' || value == 1;
+			} else if(variableSettings[key].isNumber) {
+				value = parseFloat(value);
+			}
+		} else {
+			console.log(chalk.orange(`warning: variable '${key}' is not declared in the template .senggenerator file`));
+		}
+
+		result[key] = value;
+
+		return result;
+	}, {});
+
+	variables = _.merge(variables, userVariables, getNames(options.name));
+
 	return new Promise((resolve, reject) => {
 		metalsmith(fullTemplatePath)
-			.metadata(Object.assign({}, getNames(options.name)))
+			.metadata(variables)
 			.source('.')
 			.destination(path.resolve(options.destination))
 			.clean(false)
@@ -51,7 +101,6 @@ module.exports = function generate(type, options, settings) {
 };
 
 function getNames(name) {
-
 	return {
 		name,
 		name_cc: toCamelCase(name),

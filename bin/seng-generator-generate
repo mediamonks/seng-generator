@@ -6,6 +6,8 @@ const chalk = require('chalk');
 const fs = require('fs');
 const path = require('path');
 const Settings = require('../src/settings');
+const _ = require('lodash');
+const inquirer = require('inquirer');
 
 let templateType = null;
 let componentName = null;
@@ -22,6 +24,8 @@ program
 	.option('-s, --sub-directory <directory>', 'Set subdirectory')
 	.option('-p, --template-path <template-path>', 'Override template path')
 	.option('-f, --force', 'Force creation of a component')
+	.option('-v, --variables <variables>', 'Set custom variables')
+	.option('-w, --wizard', 'Use wizard to set custom variables')
 	.parse(process.argv);
 
 if (!templateType) {
@@ -63,19 +67,61 @@ if (!fs.existsSync(destination) && !program.force) {
 	process.exit(1);
 }
 
-Promise.all(componentName.split(',').map((name) => {
-	const options = {
-		name: name,
-		destination: destination
-	};
+let variables = null;
+if(program.variables) {
+	variables = parseVariables(program.variables);
+}
 
-	return generate(templateType, options, settings);
-})).then(() => {
-	console.log();
-	console.log(chalk.green('Done!'));
-});
+if(program.wizard) {
+	let templateSettings = Settings.getTemplateSettings(settings.templatePath)[templateType];
 
+	if(templateSettings.variables) {
+		inquirer.prompt(templateSettings.variables).then((answers) => {
+			variables = _.merge(variables, answers);
 
+			generateCode();
+		});
+	} else {
+		generateCode();
+	}
+} else {
+	generateCode();
+}
 
+function generateCode() {
+	Promise.all(componentName.split(',').map((name) => {
+		const options = {
+			name: name,
+			destination: destination,
+			variables: variables
+		};
 
+		return generate(templateType, options, settings);
+	})).then(() => {
+		console.log();
+		console.log(chalk.green('Done!'));
+	});
+}
 
+function parseVariables(input) {
+	input = input + ',';
+
+	const result = {};
+
+	const regexp = /([$A-Z_a-z0-9]+)=(([A-Z_\-a-z,0-9$])|([A-Z_\-a-z[,)]+]))+,/g;
+
+	while(true) {
+		let variable = (regexp.exec(input) || [])[0];
+
+		if(!variable) break;
+
+		const parts = variable.split('=');
+
+		const name = parts[0];
+		const value = (parts[1] || '').replace(/(\[|])+/g, '').replace(/[,;]$/, '');
+
+		result[name] = value;
+	}
+
+	return result;
+}

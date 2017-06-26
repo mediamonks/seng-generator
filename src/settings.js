@@ -4,6 +4,7 @@ const userSettings = require('user-settings').file(settingsFile);
 const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
+const _ = require('lodash');
 
 const defaultSettings = {
 	templatePath: '',
@@ -53,6 +54,14 @@ exports.getLocalSettings = function (settingsPath = '.') {
 		} catch (e) {
 			console.error(chalk.red(`Error parsing local ${settingsFile} file.`));
 			process.exit(1);
+		}
+
+		if(settings.variables) {
+			const defaultVariable = {
+				type: 'input'
+			};
+
+			settings.variables = settings.variables.map((variable) => _.merge(defaultVariable, variable));
 		}
 
 		return settings;
