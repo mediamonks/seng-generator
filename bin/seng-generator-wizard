@@ -14,9 +14,10 @@ program
 		templateType = type;
 		componentName = name;
 	})
+	.option('-f, --force', 'Force creation of a component')
 	.parse(process.argv);
 
-wizard(templateType, componentName);
+wizard(templateType, componentName, program.force);
 
 
 

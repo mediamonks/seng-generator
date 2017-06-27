@@ -68,14 +68,14 @@ if (!fs.existsSync(destination) && !program.force) {
 }
 
 let variables = null;
-if(program.variables) {
+if (program.variables) {
 	variables = parseVariables(program.variables);
 }
 
-if(program.wizard) {
+if (program.wizard) {
 	let templateSettings = Settings.getTemplateSettings(settings.templatePath)[templateType];
 
-	if(templateSettings.variables) {
+	if (templateSettings.variables) {
 		inquirer.prompt(templateSettings.variables).then((answers) => {
 			variables = _.merge(variables, answers);
 
@@ -111,10 +111,12 @@ function parseVariables(input) {
 
 	const regexp = /([$A-Z_a-z0-9]+)=(([A-Z_\-a-z,0-9$])|([A-Z_\-a-z[,)]+]))+,/g;
 
-	while(true) {
+	while (true) {
 		let variable = (regexp.exec(input) || [])[0];
 
-		if(!variable) break;
+		if (!variable) {
+			break;
+		}
 
 		const parts = variable.split('=');
 

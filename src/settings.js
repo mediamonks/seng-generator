@@ -56,7 +56,7 @@ exports.getLocalSettings = function (settingsPath = '.') {
 			process.exit(1);
 		}
 
-		if(settings.variables) {
+		if (settings.variables) {
 			const defaultVariable = {
 				type: 'input'
 			};
