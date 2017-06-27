@@ -16,7 +16,7 @@ module.exports = function generate(type, options, settings) {
 
 	templatePath = paths.find((templatePath) => pathExists(path.join(templatePath, '/' + type)));
 
-	if(!templatePath) {
+	if (!templatePath) {
 		console.error(chalk.red(`Template folder that contains template ${type} doesn't exist`));
 		return Promise.reject();
 	}
@@ -28,61 +28,11 @@ module.exports = function generate(type, options, settings) {
 
 	const fullTemplatePath = path.join(templatePath, '/' + type);
 
-	let userVariables = options.variables || {};
-	let variables = {};
-	let variableSettings = {};
-
-	if(settings.templates[type]) {
-		variableSettings = (settings.templates[type].variables || []).reduce((result, variable) => {
-			result[variable.name] = variable;
-
-			return result;
-		}, {});
-		variables = (settings.templates[type].variables || []).reduce((result, variable) => {
-			if(typeof variable.default === 'undefined' && typeof userVariables[variable.name] === 'undefined') {
-				console.log(chalk.yellow(`Warning: custom variable '${variable.name}' is not supplied and has no default value`));
-				console.log();
-			}
-
-			result[variable.name] = variable.default || '';
-
-			return result;
-		}, {});
-	}
-
-	userVariables = Object.keys(userVariables).reduce((result, key) => {
-		let value = userVariables[key];
-
-		if(variableSettings[key]) {
-			if(variableSettings[key].isArray) {
-				value = value.split(',');
-				if(variableSettings[key].isBoolean) {
-					value = value.map((item) => item == 'true' || item == 1);
-				} else if(variableSettings[key].isNumber) {
-					value = value.map((item) => parseFloat(item));
-				}
-			} else if(variableSettings[key].isBoolean) {
-				value = value == 'true' || value == 1;
-			} else if(variableSettings[key].isNumber) {
-				value = parseFloat(value);
-			}
-		} else {
-			console.log(chalk.yellow(`Warning: variable '${key}' is not declared in the template .senggenerator file`));
-			console.log();
-		}
-
-		result[key] = value;
-
-		return result;
-	}, {});
-
-	variables = _.merge(variables, userVariables, getNames(options.name));
-
 	console.log(chalk.green(chalk.bold(`Generating files from '${type}' template with name: ${options.name}`)));
 
 	return new Promise((resolve, reject) => {
 		metalsmith(fullTemplatePath)
-			.metadata(variables)
+			.metadata(getVariables(type, options, settings))
 			.source('.')
 			.destination(path.resolve(options.destination))
 			.clean(false)
@@ -90,12 +40,11 @@ module.exports = function generate(type, options, settings) {
 			.use(renderPaths)
 			.use(renderTemplates)
 			.use(!options.force ? checkExists : (files, metalsmith, done) => done())
-			.build(function (err) {
+			.build((err) => {
 				if (err) {
 					console.error(chalk.red(err));
 					reject();
-				}
-				else {
+				} else {
 					resolve();
 				}
 			});
@@ -152,7 +101,7 @@ function renderTemplates(files, metalsmith, done) {
 	async.each(keys, run, done);
 
 	function run(file, done) {
-		if(isTextOrBinary.isBinarySync(path.basename(file), files[file].contents)) {
+		if (isTextOrBinary.isBinarySync(path.basename(file), files[file].contents)) {
 			done();
 			return;
 		}
@@ -176,13 +125,12 @@ function checkExists(files, metalsmith, done) {
 
 	keys.forEach((key) => {
 		const filePath = path.join(destination, key);
-		if(pathExists(filePath))
-		{
+		if (pathExists(filePath)) {
 			fileExists = filePath;
 		}
 	});
 
-	if(fileExists) {
+	if (fileExists) {
 		done(`${fileExists} already exists. Use force (-f) if you want to override the existing file.`);
 	} else {
 		done();
@@ -191,7 +139,7 @@ function checkExists(files, metalsmith, done) {
 
 function replaceVars(value, object) {
 	return value.replace(/\$?\{([@#$%&\w\.]*)(\((.*?)\))?\}/gi, (match, name) => {
-		const props = name.split(".");
+		const props = name.split('.');
 		const prop = props.shift();
 		let o = object;
 
@@ -200,5 +148,58 @@ function replaceVars(value, object) {
 		}
 		return '';
 	});
+}
+
+function getVariables(type, options, settings) {
+	let userVariables = options.variables || {};
+	let variables = {};
+	let variableSettings = {};
+
+	if (settings.templates[type]) {
+		variableSettings = (settings.templates[type].variables || []).reduce((result, variable) => {
+			result[variable.name] = variable;
+
+			return result;
+		}, {});
+		variables = (settings.templates[type].variables || []).reduce((result, variable) => {
+			if (typeof variable.default === 'undefined' && typeof userVariables[variable.name] === 'undefined') {
+				console.log(chalk.yellow(`Warning: custom variable '${variable.name}' is not supplied and has no default value`));
+				console.log();
+			}
+
+			result[variable.name] = variable.default || '';
+
+			return result;
+		}, {});
+	}
+
+	userVariables = Object.keys(userVariables).reduce((result, key) => {
+		let value = userVariables[key];
+
+		if (variableSettings[key]) {
+			if (variableSettings[key].isArray) {
+				value = value.split(',');
+				value = value.map((item) => item.trim());
+				if (variableSettings[key].isBoolean) {
+					value = value.map((item) => item == 'true' || item == 1);
+				} else if (variableSettings[key].isNumber) {
+					value = value.map((item) => parseFloat(item));
+				}
+			} else if (variableSettings[key].isBoolean) {
+				value = value == 'true' || value == 1;
+			} else if (variableSettings[key].isNumber) {
+				value = parseFloat(value);
+			}
+		} else {
+			console.log(chalk.yellow(`Warning: variable '${key}' is not declared in the template .senggenerator file`));
+			console.log();
+		}
+
+		result[key] = value;
+
+		return result;
+	}, {});
+
+	return _.merge(variables, userVariables, getNames(options.name));
 }
 
