@@ -88,6 +88,11 @@ Arguments:
 * ```type```: (Optional) The template you want to use. 
 * ```name```: (Optional) The name you want to use in the template.
 
+Options:
+
+* ```-f, --force```: Force creation. By default it's impossible override files when they already exist in the 
+destination path. This option forces the creation of code and will override files if necessary. 
+
 Examples:
 ```console
 $ sg wizard
@@ -121,7 +126,13 @@ Options:
 * ```-d, --destination <destination>```: Override the destination for store module.
 * ```-p, --template-path <template-path>```: Override template path.
 * ```-s, --sub-directory <subdirectory>```: Set subdirectory. This path is added to the destination path. 
-* ```-f, --force```: Force creation. By default it's impossible to create code if the destination path doesn't exist. This option forces the creation of code and will generates the destination folders if they don't exist. 
+* ```-f, --force```: Force creation. By default it's impossible to create code if the destination path doesn't exist 
+or when the files already exists in the destination path. This option forces the creation of code and will generates the destination folders if they don't exist. 
+* ```-v, --variables```: Set custom variables the quick way. The custom variables should be declared in the template 
+.senggenerator file. Variables should be comma separated and it's impossible to use spaces (use `sg wizard` or `-w` if you 
+need spaces). It's also possible to use arrays they should be declared as a comma separated list surrounded by brackets. `-v 
+ variable1=true,variable2=[car,house,snow]`
+* ```-w, --wizard```: Use wizard to input custom variables.
 
 Examples:
 ```console
@@ -133,7 +144,8 @@ $ sg component Button -s ./atoms
 #### settings
 
 Set or display settings. Without any options it will show the settings. By default it will set the settings locally in a .senggenerator file.
-You can also set global settings by using the global option.
+You can also set global settings by using the global option. It also displays the custom variable settings so you can
+ see which variables can be used in every template.
 
 ```console
 $ sg settings
