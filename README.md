@@ -38,7 +38,7 @@ You can for example create a template folder per project so it can be shared wit
 Templates can be customized by using variables. Variables can be used as folder name in the following format ```{variable}```. 
 Inside files you can use the handlebar syntax ```{{variable}}```.
 
-**available variables:**
+**default available variables:**
 
 * ```name```: Name in it's original format
 * ```name_pc```: Name converted to PascalCase
@@ -47,6 +47,72 @@ Inside files you can use the handlebar syntax ```{{variable}}```.
 * ```name_snc```: Name converted to snake_case
 
 Don't forget to run ```$ sg init``` or set the template path with ```$ sg settings``` to use your custom templates with seng-generator
+
+#### Custom Variables
+
+Seng-generator also supports custom variables. Custom variables can be used to create more complex templates, because
+you can use all the [handlebars features](http://handlebarsjs.com/) like conditional statements and 
+loops.
+
+The variables should be declared in the `.senggenerator` file in the root of the specific template folder in an array
+called `variables`.
+
+Example `.senggenerator` file with a custom variable: 
+```json
+{
+	"destination": "./src/common/components",
+	"variables": [{
+		"name": "debug",
+		"type": "confirm",
+		"message": "Do you want to add debug logs?",
+		"isBoolean": true,
+		"default": false
+	}]
+}
+```
+
+The options of a variable reflect the [inquirer options](https://github.com/SBoudrias/Inquirer.js#question) 
+with a few additions. The options are declared as json so javascript functions can't be used.
+
+Extra options:
+
+* ```isArray```: (boolean) Whether input should be converted to an array. The input should be a comma seperated list 
+```value1,value2,value3```.
+* ```isNumber```: (boolean) Whether input should be converted to a number.
+* ```isBoolean```: (boolean) Whether input should be converted to a boolean.
+
+It's possible to combine the ```isArray``` with ```isNumber``` or ```isBoolean```.
+
+Once they are declared you can use them in your templates: 
+
+```handlebars
+{{#if debug}}
+	console.log('{{name_pc}}', props);
+{{/if}}
+
+{{#if names}}
+  <ul>
+    {{#each names}}
+	      <li>{{this}}</li>
+      {{/each}}
+   </ul>
+{{/if}}
+
+{{functionName}}
+```
+
+Once the template is ready for use with seng-generator there are a few ways to set the custom variables:
+
+* `sg wizard`: The questions from the variable config will be added to the default wizard questions. The wizard 
+allows spaces.
+* `sg <type> <name> -w`: Will show a wizard just for the custom variables defined in the config. The wizard also allows 
+spaces.
+* `sg <type> <name> -v variable1=true,variable2=showMessage,variable3=[name1,name2,name3]`: This is the fastest way 
+to set custom variables. It has one downside and that is that it doesn't allow spaces. So if you need spaces use the 
+wizard. If a variable has a default value in the variable config you can also skip it. If you skip a variable that 
+doesn't have a default value a warning will be displayed. Always use brackets when declaring an array.
+
+The variable settings per template can be displayed by running `sg settings`.
 
 ## Settings
 
