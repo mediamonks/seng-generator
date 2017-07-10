@@ -52,7 +52,7 @@ Don't forget to run ```$ sg init``` or set the template path with ```$ sg settin
 
 Seng-generator also supports custom variables. Custom variables can be used to create more complex templates, because
 you can use all the [handlebars features](http://handlebarsjs.com/) like conditional statements and 
-loops.
+loops. You can also use all the helpers from [handlebars helpers](https://github.com/helpers/handlebars-helpers).
 
 The variables should be declared in the `.senggenerator` file in the root of the specific template folder in an array
 called `variables`.
