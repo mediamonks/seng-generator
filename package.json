@@ -39,6 +39,7 @@
     "consolidate": "^0.14.5",
     "fs-extra": "^2.0.0",
     "handlebars": "^4.0.6",
+    "handlebars-helpers": "^0.9.2",
     "inquirer": "^3.0.5",
     "istextorbinary": "^2.1.0",
     "lodash": "^4.17.4",

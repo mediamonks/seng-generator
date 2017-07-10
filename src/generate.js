@@ -10,6 +10,7 @@ const toCamelCase = require('to-camel-case');
 const toPascalCase = require('to-pascal-case');
 const isTextOrBinary = require('istextorbinary');
 const _ = require('lodash');
+const handleBarsHelpers = require('handlebars-helpers')();
 
 module.exports = function generate(type, options, settings) {
 	const paths = settings.templatePath.split(',');
@@ -97,6 +98,7 @@ function filterSettings(files, metalsmith, done) {
 function renderTemplates(files, metalsmith, done) {
 	const keys = Object.keys(files);
 	const metadata = metalsmith.metadata();
+	metadata.helpers = handleBarsHelpers;
 
 	async.each(keys, run, done);
 
