@@ -17,7 +17,7 @@ program
 	.option('-f, --force', 'Force creation of a component')
 	.parse(process.argv);
 
-wizard(templateType, componentName, program.force);
+wizard(templateType, componentName, program.force || false);
 
 
 
