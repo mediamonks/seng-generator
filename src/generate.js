@@ -180,7 +180,7 @@ function getVariables(type, options, settings) {
 
 		if (variableSettings[key]) {
 			if (variableSettings[key].isArray) {
-				value = value.split(',');
+				value = Array.isArray(value) ? value : value.split(',');
 				value = value.map((item) => item.trim());
 				if (variableSettings[key].isBoolean) {
 					value = value.map((item) => item == 'true' || item == 1);
