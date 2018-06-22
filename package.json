@@ -1,6 +1,6 @@
 {
   "name": "seng-generator",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "A CLI generator to create code based on templates",
   "preferGlobal": true,
   "bin": {
