@@ -198,10 +198,15 @@ function getVariables(type, options, settings) {
 		}
 
 		result[key] = value;
+		if(typeof value === 'string'){
+			result[key+"_pc"] = toPascalCase(value);
+			result[key+"_sc"] = toSlugCase(value);
+			result[key+"_cc"] = toCamelCase(value);
+			result[key+"_snc"] = toSnakeCase(value);
+		}
 
 		return result;
 	}, {});
 
 	return _.merge(variables, userVariables, getNames(options.name));
 }
-
