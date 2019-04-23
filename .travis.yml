@@ -12,8 +12,7 @@ before_install:
 deploy:
   - provider: npm
     email: 'devmonk@mediamonks.com'
-    api_key:
-      secure: "CdvTXezNDLNTDiXrsO3w05Nd83NqTGMaw039UFQ1xPh3YcGjbQnHG7I3st11u/kShZzuli71zI6FW6tn/zHKdLuYvFeQEbfdf/ExRwJkrmpLpyLi00bFaNhGU10WfN3ECL3zTWc8fzbF98yAJu8sGKgeW2F76g2wEKuTJGYfPxeFydk2exIWjxKGNQLSpbim6giLycar8dk4JfzYDVRDxa8GxAZuLsL1HKdT9J+dC+DLK08YqSjtQ4J5+viOL7WCkz2lJjYrWhNvAn8i4Wb0WV66u/J2nXMskBUWHMXdn+GCz1K7XsTXEQy/2raOutf32FiBq21bu5kBVz1yoRt8LYJyVEx0xOY7zQvR56e/OQ/WCQCYWjmifFcd7qWPN4OMHfkF+FlJ0yfzy0AzTP/eT3AIw8diuVVad6sgoE2DoD9K4Wc8gVxt74R7sxuA6+PnsVBcVwDBbAVndoOE9d8ToBcM24EdNCxgNmTo5d6Qv+iV49vh9N0xMDb+epSXNHnlK50gAH6bG6vQH8R4dLW1ijqLsTmMUaFYQz7GkPd+SybTQLaoxi8LTxiKcAFHOnXEeay/NUZ6k1eVQLCvF6n/NZYQglLrMZdBH9m+B45d5gIZIYZa21LdOokASSvKAYviI62uSljGrvKend2GgAedpl0S1r7L+1dIz1Xv/O1Mb2A="
+    api_key: $NPM_TOKEN
     on:
       tags: true
       node: '6'
