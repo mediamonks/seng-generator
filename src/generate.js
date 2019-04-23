@@ -39,6 +39,7 @@ module.exports = function generate(type, options, settings) {
 			.clean(false)
 			.use(filterSettings)
 			.use(renderPaths)
+			.use(removeTemplateExtensions(settings))
 			.use(renderTemplates)
 			.use(!options.force ? checkExists : (files, metalsmith, done) => done())
 			.build((err) => {
@@ -81,6 +82,28 @@ function renderPaths(files, metalsmith, done) {
 	});
 
 	done();
+}
+
+function removeTemplateExtensions(settings) {
+	return function removeTemplateExtensionsPlugin(files, metalsmith, done) {
+		const keys = Object.keys(files);
+
+		keys.forEach((key) => {
+			let newKey = settings.templateExtensions.reduce((currentFilename, extension) => {
+				if (currentFilename.endsWith(extension)) {
+					return currentFilename.substring(0, currentFilename.length - extension.length);
+				}
+				return currentFilename;
+			}, key);
+
+			if (newKey != key) {
+				files[newKey] = files[key];
+				delete files[key];
+			}
+		});
+
+		done();
+	}
 }
 
 function filterSettings(files, metalsmith, done) {
