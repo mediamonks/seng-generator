@@ -8,7 +8,8 @@ const _ = require('lodash');
 
 const defaultSettings = {
 	templatePath: '',
-	destination: '.'
+	destination: '.',
+	templateExtensions: ['.sg']
 };
 
 exports.getSettings = function (overrides = {}, ignoreLocalSettings = false, ignoreTemplateSettings = false) {

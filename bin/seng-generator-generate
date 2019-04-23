@@ -23,6 +23,7 @@ program
 	.option('-d, --destination <destination>', 'Override destination')
 	.option('-s, --sub-directory <directory>', 'Set subdirectory')
 	.option('-p, --template-path <template-path>', 'Override template path')
+	.option('-e, --template-extensions <extensions>', 'Comma-separated list of template extensions')
 	.option('-f, --force', 'Force creation of a component')
 	.option('-v, --variables <variables>', 'Set custom variables')
 	.option('-w, --wizard', 'Use wizard to set custom variables')
@@ -50,6 +51,10 @@ if (program.subDirectory) {
 
 if (program.templatePath) {
 	settingsOverrides['templatePath'] = program.templatePath;
+}
+
+if (program.templateExtensions) {
+	settingsOverrides['templateExtensions'] = program.templateExtensions.split(',');
 }
 
 const settings = Settings.getSettings(settingsOverrides);

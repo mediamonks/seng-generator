@@ -33,6 +33,14 @@ You can create as many templates as you need. It's also possible to create multi
 separated templatePath can be used if there are multiple folders with templates). 
 You can for example create a template folder per project so it can be shared with other project members together with the rest of the code.
 
+**template extensions**
+
+If a filename of your template files has one of the extensions from the `templateExtensions` setting, this extension
+will be stripped from the generated filenames. Templates with other extensions will keep the same extension.
+
+The default value for the `templateExtensions` setting is `[".sg"]`. This means that, for example, a template named
+`foo.txt.sg` will generate a file with the filename `foo.txt`. 
+
 #### Variables
 
 Templates can be customized by using variables. Variables can be used as folder name in the following format ```{variable}```. 
@@ -191,6 +199,8 @@ Options:
 
 * ```-d, --destination <destination>```: Override the destination for store module.
 * ```-p, --template-path <template-path>```: Override template path.
+* ```-e, --template-extensions <extensions>```: Override the template extensions by providing a comma-separated list of 
+template extensions. 
 * ```-s, --sub-directory <subdirectory>```: Set subdirectory. This path is added to the destination path. 
 * ```-f, --force```: Force creation. By default it's impossible to create code if the destination path doesn't exist 
 or when the files already exists in the destination path. This option forces the creation of code and will generates the destination folders if they don't exist. 
@@ -221,6 +231,7 @@ Options:
 
 * ```-d, --destination <destination>```: Set the destination path.
 * ```-t, --template-path <template-path>```: Set template path.
+* ```-e, --template-extensions <extensions>```: Set template extensions (provide a comma-separated list).
 * ```-l, --log```: Log global or local settings depending on the global flag.
 * ```-g, --global```: Set global settings.
 

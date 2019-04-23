@@ -7,6 +7,7 @@ const Settings = require('../src/settings');
 program
 	.option('-d, --destination <destination>', 'Set default destination')
 	.option('-t, --template-path <destination>', 'Set default template directory')
+	.option('-e, --template-extensions <extensions>', 'Comma-separated list of template extensions')
 	.option('-g, --global', 'Set global settings')
 	.option('-l, --log', 'Log global or local settings depending on global flag')
 	.parse(process.argv);
@@ -34,6 +35,10 @@ if (program.destination) {
 
 if (program.templatePath) {
 	settings['templatePath'] = program.templatePath;
+}
+
+if (program.templateExtensions) {
+	settings['templateExtensions'] = program.templateExtensions.split(',');
 }
 
 if (Object.keys(settings).length == 0 && !program.global) {
